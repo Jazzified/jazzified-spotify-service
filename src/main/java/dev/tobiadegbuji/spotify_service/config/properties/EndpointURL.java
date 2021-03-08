@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "url.virtual") //Only retrieves properties with prefix of URL
+@ConfigurationProperties(prefix = "url") //Only retrieves properties with prefix of URL
 @Component
 public class EndpointURL {
     private String spotifyApiToken;
