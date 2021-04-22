@@ -1,7 +1,9 @@
 package dev.tobiadegbuji.spotify_service.service;
 
 
-import dev.tobiadegbuji.spotify_service.dto.SearchArtistResponse;
+import dev.tobiadegbuji.spotify_service.dto.AuthenticationResponse;
+import dev.tobiadegbuji.spotify_service.dto.SearchRequest;
+import dev.tobiadegbuji.spotify_service.service.rest.SpotifySearchService;
 import dev.tobiadegbuji.spotify_service.service.rest.SpotifyTokenService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,15 +16,18 @@ import org.springframework.stereotype.Service;
 public class SpotifyServiceEngine {
 
     private final SpotifyTokenService spotifyTokenService;
+    private final SpotifySearchService spotifySearchService;
 
-    public SearchArtistResponse retrieveSearchResponse(){
+    public Object retrieveSearchResponse(SearchRequest searchRequest) {
 
         //Retrieve Spotify Token
-        spotifyTokenService.retrieveToken(new HttpHeaders());
+        AuthenticationResponse authenticationResponse = spotifyTokenService.retrieveToken(new HttpHeaders());
 
         //Retrieve Search Result
+        Object searchResponse = spotifySearchService.getArtistResponse(authenticationResponse, searchRequest);
 
-        return null;
+
+        return searchResponse;
     }
 
 }

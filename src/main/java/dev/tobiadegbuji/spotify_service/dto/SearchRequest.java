@@ -17,7 +17,7 @@ public class SearchRequest {
     private String query;
 
     @NotBlank
-    private SpotifyTypeEnum spotifyTypeEnum;
+    private String type;
 
     @Min(0)
     @Max(20)
