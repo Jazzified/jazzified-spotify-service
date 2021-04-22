@@ -1,7 +1,7 @@
 package dev.tobiadegbuji.spotify_service.service;
 
 
-import dev.tobiadegbuji.spotify_service.dto.SearchResponse;
+import dev.tobiadegbuji.spotify_service.dto.SearchArtistResponse;
 import dev.tobiadegbuji.spotify_service.service.rest.SpotifyTokenService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ public class SpotifyServiceEngine {
 
     private final SpotifyTokenService spotifyTokenService;
 
-    public SearchResponse retrieveSearchResponse(){
+    public SearchArtistResponse retrieveSearchResponse(){
 
         //Retrieve Spotify Token
         spotifyTokenService.retrieveToken(new HttpHeaders());

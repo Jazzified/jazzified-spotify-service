@@ -1,7 +1,8 @@
 package dev.tobiadegbuji.spotify_service.service.rest;
 
 import dev.tobiadegbuji.spotify_service.config.AppConfig;
-import dev.tobiadegbuji.spotify_service.dto.SearchResponse;
+import dev.tobiadegbuji.spotify_service.dto.AuthenticationResponse;
+import dev.tobiadegbuji.spotify_service.dto.SearchArtistResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,11 @@ public class SpotifySearchService {
     private AppConfig config;
 
 
-    public SearchResponse
+    public SearchArtistResponse getArtistResponse(AuthenticationResponse authResponse){
+
+
+        return null;
+    }
 
 
 }
