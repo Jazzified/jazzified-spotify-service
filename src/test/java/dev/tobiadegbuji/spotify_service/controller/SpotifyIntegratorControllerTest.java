@@ -28,23 +28,20 @@ class SpotifyIntegratorControllerTest {
     private SpotifyIntegratorController spotifyIntegratorController;
 
     Object searchArtistRes;
-    SearchRequest searchRequest;
 
     @BeforeEach
     void setUp() {
         searchArtistRes = new SearchArtistResponse();
-        searchRequest = new SearchRequest();
-        searchRequest.setQuery("John");
+
     }
 
     @Test
     void queryForArtist() {
         //GIVEN
         given(spotifyServiceEngine.retrieveSearchResponse(any(SearchRequest.class))).willReturn(searchArtistRes);
-        searchRequest.setType("artist");
 
         //WHEN
-        ResponseEntity<SearchArtistResponse> res = spotifyIntegratorController.queryForArtist(searchRequest);
+        ResponseEntity<SearchArtistResponse> res = spotifyIntegratorController.queryForArtist("","", 0);
 
         //THEN
         assertEquals(res.getBody(), searchArtistRes);

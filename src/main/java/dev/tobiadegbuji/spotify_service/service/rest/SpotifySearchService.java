@@ -36,7 +36,8 @@ public class SpotifySearchService {
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(properties.getEndpointURL().getSpotifySearchQuery())
                 .queryParam("q", searchRequest.getQuery())
-                .queryParam("type", searchRequest.getType().toLowerCase());
+                .queryParam("type", searchRequest.getType().toLowerCase())
+                .queryParam("limit", searchRequest.getLimit());
 
         log.info(builder.toUriString());
 

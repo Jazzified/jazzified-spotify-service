@@ -4,25 +4,34 @@ import dev.tobiadegbuji.spotify_service.dto.SearchArtistResponse;
 import dev.tobiadegbuji.spotify_service.dto.SpotifyArtists;
 import dev.tobiadegbuji.spotify_service.dto.SearchRequest;
 import dev.tobiadegbuji.spotify_service.service.SpotifyServiceEngine;
+import dev.tobiadegbuji.spotify_service.utils.CommonConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.naming.directory.SearchResult;
 import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/jazzified/spotify")
+@RequestMapping("api/v1/jazzified/spotify")
 public class SpotifyIntegratorController {
 
     private final SpotifyServiceEngine spotifyServiceEngine;
 
     @GetMapping("/searchArtist")
-    public ResponseEntity<SearchArtistResponse> queryForArtist(@RequestBody @Valid SearchRequest searchRequest){
+    public ResponseEntity<SearchArtistResponse> queryForArtist(@RequestParam(required = true) String type,
+                                                               @RequestParam(required = true) String query,
+                                                               @RequestParam(value = CommonConstants.QUERY_LIMIT, required = false) Integer limit){
+
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setType(type);
+        searchRequest.setQuery(query);
+        searchRequest.setLimit(Integer.valueOf(CommonConstants.QUERY_LIMIT));
+
+        System.out.println(searchRequest);
+
         SearchArtistResponse searchArtistResponse = (SearchArtistResponse) spotifyServiceEngine.retrieveSearchResponse(searchRequest);
         return new ResponseEntity<>(searchArtistResponse, HttpStatus.OK);
 

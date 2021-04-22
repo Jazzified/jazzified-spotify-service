@@ -10,4 +10,5 @@ public class CommonConstants {
     public static final String HEADER_VIRTUAL_REQUEST = "VirtualRequest";
     public static final String TRUE = "true";
     public static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
+    public static final String QUERY_LIMIT ="20";
 }
