@@ -11,6 +11,4 @@ import org.springframework.stereotype.Component;
 @Component
 public class EndpointURL {
     private String spotifyApiToken;
-    private String spotifyApiRefreshToken;
-    private String spotifySubscriptions;
 }
