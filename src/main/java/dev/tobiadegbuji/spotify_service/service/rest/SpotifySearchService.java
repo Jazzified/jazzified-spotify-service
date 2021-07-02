@@ -4,6 +4,7 @@ import dev.tobiadegbuji.spotify_service.config.properties.ConfigProperties;
 import dev.tobiadegbuji.spotify_service.dto.AuthenticationResponse;
 import dev.tobiadegbuji.spotify_service.dto.SearchArtistResponse;
 import dev.tobiadegbuji.spotify_service.dto.SearchRequest;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,7 +27,8 @@ public class SpotifySearchService {
 
     private ConfigProperties properties;
 
-    public Object getArtistResponse(AuthenticationResponse authResponse, SearchRequest searchRequest) {
+    @CircuitBreaker(name = "artistResponseCB", fallbackMethod = "artistResponseFallback")
+    public SearchArtistResponse getArtistResponse(AuthenticationResponse authResponse, SearchRequest searchRequest) {
 
         //Add Auth Header
         HttpHeaders headers = new HttpHeaders();
@@ -53,12 +56,13 @@ public class SpotifySearchService {
                     searchSpotifyRequest,
                     SearchArtistResponse.class
             ));
-            log.info(response.get().getBody().toString());
+            log.info(Objects.requireNonNull(response.get().getBody()).toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return response.map(HttpEntity::getBody).orElseThrow(() -> new RuntimeException());
+        return response.map(HttpEntity::getBody)
+                .orElseThrow(RuntimeException::new);
     }
 
 

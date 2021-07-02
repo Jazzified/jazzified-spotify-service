@@ -58,6 +58,7 @@ public class SpotifyTokenService {
                 log.debug(authResponse::toString);
 
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new SSAuthTokenException(e);
         }
 

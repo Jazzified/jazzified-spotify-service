@@ -25,7 +25,7 @@ class SpotifyIntegratorControllerTest {
     private SpotifyServiceEngine spotifyServiceEngine;
 
     @InjectMocks
-    private SpotifyIntegratorController spotifyIntegratorController;
+    private SpotifyServiceController spotifyIntegratorController;
 
     Object searchArtistRes;
 

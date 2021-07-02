@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/v1/jazzified/spotify")
-public class SpotifyIntegratorController {
+public class SpotifyServiceController {
 
     private final SpotifyServiceEngine spotifyServiceEngine;
 
@@ -33,5 +33,7 @@ public class SpotifyIntegratorController {
         return new ResponseEntity<>(searchArtistResponse, HttpStatus.OK);
 
     }
+
+
 
 }
