@@ -26,7 +26,7 @@ public class SpotifyTokenService {
 
     public AuthenticationResponse retrieveToken(HttpHeaders headers) {
 
-        log.debug("Beginning retrieveToken method");
+        log.debug("BEGINNING RECEIVE TOKEN METHOD");
 
         //Authentication Endpoint for Spotify
         String authEndPoint = configProperties.getEndpointURL().getSpotifyApiToken();
@@ -34,9 +34,8 @@ public class SpotifyTokenService {
         //Create Authorization Header
         Base64 base64Token = new Base64();
         String clientIdAndSecret = configProperties.getAuthConfig().getClientId() + ":" + configProperties.getAuthConfig().getClientSecret();
-        log.debug(() -> "ClientId and ClientSecret: " + clientIdAndSecret);
         String authorizationHeaderValue = "Basic " + base64Token.encodeToString(clientIdAndSecret.getBytes());
-        log.debug(() -> "Auth Header: " + authorizationHeaderValue);
+        log.debug(() -> "AUTH HEADER: " + authorizationHeaderValue);
         headers.add("Authorization", authorizationHeaderValue);
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
@@ -46,7 +45,8 @@ public class SpotifyTokenService {
         //Form Request
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(authenticationRequest, headers);
 
-        log.debug(() -> request.getBody().toString());
+        if(request.getBody() != null)
+        log.debug(() -> "TOKEN REQ BODY: " + request.getBody().toString());
 
         AuthenticationResponse authResponse;
 
@@ -55,7 +55,7 @@ public class SpotifyTokenService {
             authResponse = restTemplate.postForObject(authEndPoint, request, AuthenticationResponse.class);
 
             if (authResponse != null)
-                log.debug(authResponse::toString);
+                log.debug(() -> "AUTH RESPONSE: " + authResponse.toString());
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -63,7 +63,7 @@ public class SpotifyTokenService {
         }
 
 
-        log.debug("Ending retrieveToken method");
+        log.debug("ENDING RECEIVE TOKEN METHOD");
 
 
         return authResponse;
