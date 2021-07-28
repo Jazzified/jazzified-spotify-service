@@ -11,63 +11,45 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.util.Logger;
 
+import java.net.URI;
+import java.time.Duration;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 @Log4j2
 @AllArgsConstructor
 public class SpotifySearchService {
 
+    private final ConfigProperties properties;
 
-    private RestTemplate restTemplate;
+    // @CircuitBreaker(name = "artistResponseCB", fallbackMethod = "artistResponseFallback")
+    public Mono<SearchArtistResponse> getArtistResponse(AuthenticationResponse authResponse, SearchRequest searchRequest) {
 
-    private ConfigProperties properties;
+        WebClient webClient = WebClient
+                .builder()
+                .baseUrl(properties.getEndpointURL().getSpotifySearchQuery())
+                .defaultHeaders(httpHeaders -> httpHeaders.set("Authorization", "Bearer" + " " + authResponse.getAccess_token()))
+                .build();
 
-   // @CircuitBreaker(name = "artistResponseCB", fallbackMethod = "artistResponseFallback")
-    public SearchArtistResponse getArtistResponse(AuthenticationResponse authResponse, SearchRequest searchRequest) {
-
-        //Add Auth Header
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer" + " " + authResponse.getAccess_token());
-
-        //Add path parameters
-        UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(properties.getEndpointURL().getSpotifySearchQuery())
+        Function<UriBuilder, URI> requestUri = uriBuilder -> uriBuilder
                 .queryParam("q", searchRequest.getQuery())
                 .queryParam("type", searchRequest.getType().toLowerCase())
-                .queryParam("limit", searchRequest.getLimit());
+                .queryParam("limit", searchRequest.getLimit())
+                .build();
 
-        log.debug(() -> "REQ ENDPOINT: " + builder.toUriString());
+        return webClient.get()
+                .uri(requestUri)
+                .retrieve()
+                .bodyToMono(SearchArtistResponse.class);
 
-
-        HttpEntity<?> searchSpotifyRequest = new HttpEntity<>(headers);
-
-        Optional<HttpEntity<SearchArtistResponse>> response = Optional.empty();
-
-        try {
-            response = Optional.of(restTemplate.exchange(
-                    builder.toUriString(),
-                    HttpMethod.GET,
-                    searchSpotifyRequest,
-                    SearchArtistResponse.class
-            ));
-
-            Optional<HttpEntity<SearchArtistResponse>> finalResponse = response;
-
-            log.debug(() -> "CLIENT RESPONSE: " + Objects.requireNonNull(finalResponse.get().getBody()).toString());
-
-        } catch (Exception e) {
-            //TODO: REMOVE
-            e.printStackTrace();
-        }
-
-        //TODO: Create proper exception
-        return response.map(HttpEntity::getBody)
-                .orElseThrow(RuntimeException::new);
     }
-
-
 }

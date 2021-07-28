@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public class SpotifyServiceController {
     private final SpotifyServiceEngine spotifyServiceEngine;
 
     @GetMapping("/searchArtist")
-    public ResponseEntity<SearchArtistResponse> queryForArtist(@RequestParam String type,
+    public Mono<SearchArtistResponse> queryForArtist(@RequestParam String type,
                                                                @RequestParam String query,
                                                                @RequestParam(value = CommonConstants.QUERY_LIMIT, required = false) Integer limit){
 
@@ -29,8 +30,7 @@ public class SpotifyServiceController {
         searchRequest.setQuery(query);
         searchRequest.setLimit(Integer.parseInt(CommonConstants.QUERY_LIMIT));
 
-        SearchArtistResponse searchArtistResponse = (SearchArtistResponse) spotifyServiceEngine.retrieveSearchResponse(searchRequest);
-        return new ResponseEntity<>(searchArtistResponse, HttpStatus.OK);
+        return spotifyServiceEngine.retrieveSearchResponse(searchRequest);
 
     }
 
